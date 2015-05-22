@@ -1,4 +1,4 @@
-1;3409;0c//foreach is useful but it doesn't return anything
+//foreach is useful but it doesn't return anything
 //There are methods that operate on sequences that return things like map and reduce
 
 //map takes its argument - a function that takes a single argument and produces a result - and applies it
@@ -25,4 +25,9 @@ println(a)
 //sumIt(1,2,3) is 6
 //sumIt(45,45,45,60) is 195
 
-def sumIt(
+def sumIt(args:Int*) = {
+  args.reduce((sum, n) => sum + n)
+}
+
+println(sumIt(1,2,3))
+println(sumIt(45,45,45,60))
