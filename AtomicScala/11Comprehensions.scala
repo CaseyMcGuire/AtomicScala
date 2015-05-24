@@ -67,4 +67,21 @@ println(yielding3(v))
 //You can only have one yield expression connected with a comprehension but you can have nested
 //comprehensions
 
+def yielding4(v:Vector[Int]) = {
+  for {
+    n <- v
+    if n < 10
+    isOdd = (n % 2 != 0)
+    if(isOdd)
+  } yield {
+    for(u <- Range(0, n))
+    yield u
+  }
+}
+
+val v2 = Vector(1,2,3,5,6,7,8,10,13,14,17)
+println(yielding4(v))
+//Here, we let type inference determine the return type of yielding4
+//Each yield produces a vector, so the end result is a Vector of Vectors
+
 
