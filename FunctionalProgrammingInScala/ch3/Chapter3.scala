@@ -57,13 +57,58 @@ object List {
     def dropWhile(l: List[A]): List[A] = l match {
       case Nil => Nil
       case Cons(x,xs) => if (f(x)) dropWhile(xs) else xs
-
     }
     dropWhile(l)
   }
 
+  //Note that with our implementation here, we have to state the type of the parameter when calling 
+  //dropwhile
+  val xs: List[Int] = List(1,2,3,4,5)
+  val ex1 = dropWhile(xs, (x: Int) => x < 4)
 
+  //alternatively, you can write a curried version of dropWhile like so
+  def dropWhile2[A](as: List[A])(f: A => Boolean): List[A] = 
+    as match {
+      case Cons(h,t) if f(h) => dropWhile2(t)(f)
+      case _ => as
+    }
 
+  //Essentially, what this is saying is that dropWhile is function that takes a List and returns another
+  //function. This other function in turn takes a function and returns a list
+  //Since this version is curried, we don't have annotate the lambda function
+  val xs2 = List(1,2,3,4,5)
+  val ex2 = dropWhile2(xs)( x => x < 4)
+
+  //3.6
+  //Implement a function init that returns a list consisting of all but the last element of a list
+  def init[A](l: List[A]): List[A] = {
+    l match {
+      case Nil => throw new Exception("Empty list")
+      case Cons(x,Nil) => Nil
+      case Cons(x,xs) => Cons(x, init(xs))
+    }
+  }
+
+  //If we look at our sum and product functions, we can see how similar they are. They essentially
+  //are recursing down the list calling a different function on the head and the tail at each iteration
+  //Whenever you see such duplication, you generalize it by pulling subexpressions out into function
+  //arguments.
+  //If the subexpression refers to any local variables, turn the subexpressions into a function that 
+  //accepts these variables as arguments.
+
+  //Note this function is not tail-recursive
+  def foldRight[A,B](as: List[A], z: B)(f: (A,B) => B): B = 
+    as match {
+      case Nil => z
+      case Cons(x, xs) => f(x, foldRight(xs, z)(f))
+    }
+
+  def sum2(ns: List[Int]) = 
+    foldRight(ns, 0)((x,y) => x + y)
+
+  def product2(ns: List[Double]) = 
+    foldRight(ns, 1.0)(_ * _)
+  //Note: (_ * _) is more concise notation for (x,y) => x * y
 
 }
 
